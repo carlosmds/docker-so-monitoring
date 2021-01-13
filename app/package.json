@@ -2,10 +2,10 @@
     "name": "node-api",
     "version": "1.0.0",
     "repository": {
-        "type" : "git",
-        "url" : "https://github.com/npm/cli.git"
+        "type": "git",
+        "url": "https://github.com/carlosmds/docker-so-monitoring"
     },
-    "description": "RESTful API with Node.js, Express, and PostgreSQL",
+    "description": "RESTful API with Node.js and Express",
     "main": "index.js",
     "license": "MIT",
     "scripts": {
