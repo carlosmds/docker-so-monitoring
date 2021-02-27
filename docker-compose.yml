@@ -1,18 +1,18 @@
 version: '3'
 services:
+  # APP
   app:
-    image: node:10
     volumes:
-      # Aplicação
       - ./app:/app
+    build: app 
     working_dir: /app
-    command: "bash -c 'cat /etc/os-release | grep PRETTY_NAME && npm start'"
+    privileged: true
     ports: 
       - 3000:3000
+  # WORKER
   worker:
     build: worker
     volumes:
-      # Worker
       - ./worker:/worker
     working_dir: /worker
     command: "bash -c 'cat /etc/os-release | grep PRETTY_NAME && python -u ./worker.py'"
