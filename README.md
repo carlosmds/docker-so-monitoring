@@ -1,3 +1,4 @@
 # docker-so-monitoring
 
-run $`docker-compose up --scale worker=1` for 1 or more workers calling the API
+- Para instalar as aplicações de monitoramento: $`./install-apps.sh`
+- Rodar a aplicação NodeJS no servidor Debian que será monitorado e worker para chamadas à aplicação: $`./start-worker.sh`
