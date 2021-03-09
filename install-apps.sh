@@ -1,8 +1,13 @@
 #!/bin/bash
 
-cd monitoring-apps/pandora && docker-compose -f docker-compose-pandora.yml up -d && cd -
-cd monitoring-apps/zabbix && docker-compose -f docker-compose-zabbix.yml up -d && cd -
-cd monitoring-apps/nagios && docker-compose -f docker-compose-nagios.yml up -d && cd -
+cd monitoring-apps/pandora \
+    && docker-compose -f docker-compose-pandora.yml up -d --force-recreate && cd -
+
+cd monitoring-apps/zabbix \
+    && docker-compose -f docker-compose-zabbix.yml up -d --force-recreate && cd -
+
+cd monitoring-apps/nagios \
+    && docker-compose -f docker-compose-nagios.yml up -d --force-recreate && cd -
 
 echo "
 ***Informações para acesso às aplicações:

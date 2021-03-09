@@ -4,6 +4,10 @@ services:
   app:
     volumes:
       - ./app:/app
+      - /run/systemd/system:/run/systemd/system
+      # - /bin/systemctl:/bin/systemctl
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      # - /sys/fs/cgroup/:/sys/fs/cgroup:ro
     build: app 
     working_dir: /app
     privileged: true

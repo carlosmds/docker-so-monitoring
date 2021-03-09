@@ -3,8 +3,12 @@
 set -x
 
 echo "SERVER CONFIG"
-echo "ENVIRONMENT UID IS $UID"
 
 apt update \
-    && apt install curl -y
-    
+    && apt-get install curl wget unzip systemd perl -y
+
+echo N | tee /sys/module/overlay/parameters/metacopy
+
+/etc/init.d/dbus start
+
+echo "ENVIRONMENT UID IS $UID"
