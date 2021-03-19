@@ -1,0 +1,71 @@
+version: '2.1'
+
+services:
+  pandora-mysql:
+    image: pandorafms/pandorafms-mysql:6
+    volumes:
+      - "./db:/var/lib/mysql:rw"
+      - "/etc/localtime:/etc/localtime:ro"
+    environment:
+      MYSQL_ROOT_PASSWORD: "StrongPasswordRoot"
+      MYSQL_DATABASE: "pandora"
+      MYSQL_USER: "pandora"
+      MYSQL_PASSWORD: "StrongPasswordMySql"
+    networks:
+      pandora:
+        ipv4_address: 172.35.0.2
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  pandora-server:
+    image: pandorafms/pandorafms-server:6
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./server-config/:/etc/postfix/"
+    ports:
+      - "41121:41121"
+    links:
+    - "pandora-mysql:mysql"
+    networks:
+      pandora:
+        ipv4_address: 172.35.0.4
+    depends_on:
+      pandora-mysql:
+        condition: service_healthy
+    environment:
+      PANDORA_DB_HOST: "172.35.0.2:3306"
+      PANDORA_DB_USER: "pandora"
+      PANDORA_DB_PASSWORD: "StrongPasswordMySql"
+
+  pandora-console:
+    image: pandorafms/pandorafms-console:6
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - "8010:80"
+      - "8022:8022"
+      - "8023:8023"
+    networks:
+      pandora:
+        ipv4_address: 172.35.0.3
+    depends_on:
+      pandora-mysql:
+        condition: service_healthy
+    links:
+    - "pandora-mysql:mysql"
+    environment:
+      PANDORA_DB_HOST: "172.35.0.2:3306"
+      PANDORA_DB_USER: "pandora"
+      PANDORA_DB_PASSWORD: "StrongPasswordMySql"
+
+networks:
+  pandora:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: "172.35.0.0/24"
+        gateway: "172.35.0.1"
