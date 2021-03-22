@@ -1,13 +1,20 @@
 #!/bin/bash
 
-cd monitoring-apps/pandora \
-    && docker-compose -f docker-compose-pandora.yml up -d --force-recreate && cd -
+docker network create so-monitoring
 
-cd monitoring-apps/zabbix \
-    && docker-compose -f docker-compose-zabbix.yml up -d --force-recreate && cd -
+cd monitoring-apps/pandora 
 
-cd monitoring-apps/nagios \
-    && docker-compose -f docker-compose-nagios.yml up -d --force-recreate && cd -
+docker-compose -f docker-compose-pandora.yml up -d --build --force-recreate
+
+cd - && cd monitoring-apps/zabbix
+
+docker-compose -f docker-compose-zabbix.yml up -d --build --force-recreate
+
+cd - && cd monitoring-apps/nagios
+
+docker-compose -f docker-compose-nagios.yml up -d --build --force-recreate
+
+cd -
 
 echo "
 ***Informações para acesso às aplicações:
@@ -21,18 +28,9 @@ echo "
 
     nagios: {
         http://localhost:8020
-        http://localhost:8020/adagios -> alternativa de interface
-        http://localhost:8020/nrdp -> não sei exatamente pra que serve...
 
         user: 'nagiosadmin'
         pass: 'nagios'
-
-        grafana: {
-            http://localhost:3003
-
-            user: 'admin'
-            pass: 'admin'
-        }
     }
 
     zabbix: {

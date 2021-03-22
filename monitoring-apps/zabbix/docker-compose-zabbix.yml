@@ -9,3 +9,7 @@ services:
       - 8030:80
     volumes:
       - ./db:/var/lib/mysql:rw
+networks:
+  default:
+    external:
+      name: so-monitoring

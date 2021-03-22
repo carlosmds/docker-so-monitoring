@@ -12,6 +12,7 @@ services:
     working_dir: /app
     privileged: true
     ports: 
+      # App API port
       - 3000:3000
       # Zabbix Agent port
       - 10050:10050
@@ -24,3 +25,7 @@ services:
     command: "bash -c 'cat /etc/os-release | grep PRETTY_NAME && python -u ./worker.py'"
     depends_on: 
       - app
+networks:
+  default:
+    external:
+      name: so-monitoring
