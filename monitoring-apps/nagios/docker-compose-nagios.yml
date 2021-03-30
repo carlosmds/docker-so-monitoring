@@ -6,9 +6,9 @@ services:
     image: jasonrivers/nagios:latest
     ports:
       - 8020:80
-      - 5666:5666
     volumes:
       - ./db:/var/lib/mysql:rw
+      - ./config:/nagios-config/:rw
 networks:
   default:
     external:

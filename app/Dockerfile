@@ -1,4 +1,4 @@
-FROM alehaa/debian-systemd:stretch
+FROM jrei/systemd-debian:9
 
 LABEL maintainer 'Carlos Medeiros - TADS UDESC 2021 - carlosmedeirosdesouza@gmail.com'
 

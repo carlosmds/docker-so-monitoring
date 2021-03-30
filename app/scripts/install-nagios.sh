@@ -4,46 +4,45 @@ set -x
 
 echo "INSTALL NAGIOS"
 
-useradd nagios
+apt install -y autoconf gcc libc6 libmcrypt-dev make libssl-dev wget bc gawk dc build-essential snmp libnet-snmp-perl gettext xinetd
 
-apt install -y autoconf gcc libmcrypt-dev make libssl-dev wget dc build-essential gettext
+mkdir /opt/nagios && cd /opt/nagios
 
-cd ~
-curl -L -O https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+wget https://www.nagios-plugins.org/download/nagios-plugins-2.1.2.tar.gz \
+    && tar -xvf nagios-plugins-2.1.2.tar.gz
 
-tar zxf nagios-plugins-2.2.1.tar.gz
-cd nagios-plugins-2.2.1
+cd nagios-plugins-2.1.2
 
-./configure
+./configure \
+    && make \
+    && make install
 
-make
+useradd nagios \
+    && chown nagios.nagios /usr/local/nagios \
+    && chown -R nagios.nagios /usr/local/nagios/libexec
 
-make install
+cd /opt/nagios/
 
-cd ~
-curl -L -O https://github.com/NagiosEnterprises/nrpe/releases/download/nrpe-3.2.1/nrpe-3.2.1.tar.gz
-
-tar zxf nrpe-3.2.1.tar.gz
+wget https://github.com/NagiosEnterprises/nrpe/releases/download/nrpe-3.2.1/nrpe-3.2.1.tar.gz \
+    && tar xzf nrpe-3.2.1.tar.gz
 
 cd nrpe-3.2.1
 
-./configure --enable-command-args
+./configure \
+    && make all \
+    && make install-plugin \
+    && make install-daemon \
+    && make install-config \
+    && make install-inetd
 
-make all
+cat /etc/services | grep nrpe
 
-make install-groups-users
+sed -i 's/\# default.*/\# default: on/g' /etc/xinetd.d/nrpe
+sed -i 's/disable.*/disable\t    = no/g' /etc/xinetd.d/nrpe
+sed -i 's/only_from.*/only_from\t    = 127.0.0.1 localhost 172.24.0.4/g' /etc/xinetd.d/nrpe
+sed -i '/log_on_success/d' /etc/xinetd.d/nrpe
 
-make install
+service xinetd restart 
+netstat -at | grep nrpe 
 
-make install-config
-
-echo >> /etc/services
-echo '# Nagios services' >> /etc/services
-echo 'nrpe    5666/tcp' >> /etc/services
-make install-init
-
-/usr/bin/install -c -m 644 startup/default-service /lib/systemd/system/nrpe.service
-
-sed -i 's/.*server_address.*/server_address=172.24.0.4/g' /usr/local/nagios/etc/nrpe.cfg
-sed -i 's/.*allowed_hosts.*/allowed_hosts=127.0.0.1,::1,172.24.0.4/g' /usr/local/nagios/etc/nrpe.cfg
-sed -i 's/.*hda1.*/command[check_root]=\/usr\/local\/nagios\/libexec\/check_disk -w 20% -c 10% -p \//g' /usr/local/nagios/etc/nrpe.cfg
+/usr/local/nagios/libexec/check_nrpe -H localhost

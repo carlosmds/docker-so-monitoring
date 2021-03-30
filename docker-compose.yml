@@ -7,13 +7,15 @@ services:
       - ./app:/app
       # to run systemctl
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+      # - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
     build: app 
     working_dir: /app
     privileged: true
     ports: 
       # App API port
       - 3000:3000
+      # Nagios NRPE Agent port
+      - 5666:5666
       # Zabbix Agent port
       - 10050:10050
   # WORKER
