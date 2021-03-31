@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker network create so-monitoring
+docker network create --driver bridge --subnet=172.24.0.0/24 --gateway=172.24.0.1  so-monitoring
 
 cd monitoring-apps/pandora 
 
@@ -11,6 +11,8 @@ cd - && cd monitoring-apps/zabbix
 docker-compose -f docker-compose-zabbix.yml up -d --build --force-recreate
 
 cd - && cd monitoring-apps/nagios
+
+docker-compose -f docker-compose-nagios.yml down
 
 docker-compose -f docker-compose-nagios.yml up -d --build --force-recreate
 

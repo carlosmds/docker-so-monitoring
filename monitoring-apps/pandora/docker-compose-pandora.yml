@@ -7,6 +7,9 @@ services:
     ports:
       - 41121:41121
       - 8010:80
+    networks:
+      default:
+        ipv4_address: 172.24.0.3
 networks:
   default:
     external:

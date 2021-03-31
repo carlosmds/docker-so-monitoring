@@ -9,6 +9,9 @@ services:
       - 8030:80
     volumes:
       - ./db:/var/lib/mysql:rw
+    networks:
+      default:
+        ipv4_address: 172.24.0.4
 networks:
   default:
     external:
