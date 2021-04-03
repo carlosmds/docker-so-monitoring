@@ -23,8 +23,7 @@ useradd nagios \
 
 cd /usr/local/nagios/libexec \
     && wget https://raw.githubusercontent.com/justintime/nagios-plugins/master/check_mem/check_mem.pl \
-    && chmod +x check_mem.pl \
-    && echo "command[check_mem]=/usr/local/nagios/libexec/check_mem.pl -f -w 20 -c 10" >> /usr/local/nagios/etc/nrpe.cfg
+    && chmod +x check_mem.pl
 
 cd /opt/nagios/
 
@@ -47,7 +46,11 @@ sed -i 's/disable.*/disable\t    = no/g' /etc/xinetd.d/nrpe
 sed -i 's/only_from.*/only_from\t    = 127.0.0.1 localhost 172.24.0.2/g' /etc/xinetd.d/nrpe
 sed -i '/log_on_success/d' /etc/xinetd.d/nrpe
 
+echo "command[check_mem]=/usr/local/nagios/libexec/check_mem.pl -f -w 20 -c 10" >> /usr/local/nagios/etc/nrpe.cfg
+
 service xinetd restart 
 netstat -at | grep nrpe 
+
+sleep 2
 
 /usr/local/nagios/libexec/check_nrpe -H localhost

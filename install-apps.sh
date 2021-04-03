@@ -24,6 +24,10 @@ docker exec -i nagios bash -c '\
 
 cd -
 
+echo '
+***Coletar dados dos containers: 
+docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}" nagios zabbix-app pandora-app'
+
 echo "
 ***Informações para acesso às aplicações:
 {
