@@ -12,6 +12,6 @@ RUN DEBIAN_FRONTEND=noninteractive bash -c "cd scripts; ./server-config.sh;\
     ./install-nagios.sh;\
     ./install-pandora.sh;\
     ./install-zabbix.sh;\
-    echo 'Done!'"
+echo 'Done!'"
 
 ENTRYPOINT bash -c "/app/scripts/start.sh"

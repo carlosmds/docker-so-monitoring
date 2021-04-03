@@ -22,6 +22,8 @@ docker exec -i nagios bash -c '\
     echo "cfg_file=/opt/nagios/etc/hosts.cfg" >> /opt/nagios/etc/nagios.cfg;\
     echo "cfg_file=/opt/nagios/etc/services.cfg" >> /opt/nagios/etc/nagios.cfg;'
 
+docker-compose -f docker-compose-nagios.yml restart
+
 cd -
 
 echo '
