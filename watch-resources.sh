@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ferramenta='zabbix'
-tempo='1m'
+ferramenta='ferramenta'
+tempo='tempo'
 
 arquivo="dados/$ferramenta-$tempo.txt"; 
 

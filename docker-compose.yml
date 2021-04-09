@@ -12,8 +12,6 @@ services:
     working_dir: /app
     privileged: true
     ports: 
-      # App API port
-      - 3000:3000
       # Nagios NRPE Agent port
       - 5666:5666
       # Zabbix Agent port

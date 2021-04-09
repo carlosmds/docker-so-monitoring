@@ -54,3 +54,11 @@ echo "
         pass: 'zabbix'
     }
 }"
+
+script -q -c "echo -e \"CPU(%)\tMEM(MB)\"; timeout 20 docker stats nagios | grep -i --line-buffered nagios | awk '{print substr(\$3, 1, length(\$3) - 1),\"\\t\",substr(\$4, 1, length(\$4) - 3)}'" -f dados/nagios-server.txt
+script -q -c "echo -e \"CPU(%)\tMEM(MB)\"; timeout 20 docker stats zabbix-app | grep -i --line-buffered zabbix-app | awk '{print substr(\$3, 1, length(\$3) - 1),\"\\t\",substr(\$4, 1, length(\$4) - 3)}'" -f dados/zabbix-server.txt
+script -q -c "echo -e \"CPU(%)\tMEM(MB)\"; timeout 20 docker stats pandora-app | grep -i --line-buffered pandora-app | awk '{print substr(\$3, 1, length(\$3) - 1),\"\\t\",substr(\$4, 1, length(\$4) - 3)}'" -f dados/pandora-server.txt
+
+sed -i 's/\./,/g' dados/nagios-server.txt
+sed -i 's/\./,/g' dados/zabbix-server.txt
+sed -i 's/\./,/g' dados/pandora-server.txt
